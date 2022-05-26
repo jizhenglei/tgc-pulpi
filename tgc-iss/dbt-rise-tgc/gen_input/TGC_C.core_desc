@@ -1,0 +1,13 @@
+import "CoreDSL-Instruction-Set-Description/RV32I.core_desc"
+import "CoreDSL-Instruction-Set-Description/RVM.core_desc"
+import "CoreDSL-Instruction-Set-Description/RVC.core_desc"
+
+Core TGC_C provides RV32I, Zicsr, Zifencei, RV32M, RV32IC {
+    architectural_state {
+        XLEN=32;
+        // definitions for the architecture wrapper
+        //                    XL    ZYXWVUTSRQPONMLKJIHGFEDCBA
+        unsigned MISA_VAL = 0b01000000000000000001000100000100;
+        unsigned MARCHID_VAL = 0x80000003;
+    }
+}

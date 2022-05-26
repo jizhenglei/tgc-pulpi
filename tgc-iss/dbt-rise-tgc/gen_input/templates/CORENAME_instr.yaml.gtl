@@ -1,0 +1,16 @@
+<% def getInstructionGroups() {
+    def instrGroups = [:]
+    instructions.each {
+        def groupName = it['instruction'].eContainer().name
+        if(!instrGroups.containsKey(groupName)) {
+            instrGroups[groupName]=[]
+        }
+        instrGroups[groupName]+=it;
+    }
+    instrGroups
+}%><%getInstructionGroups().each{name, instrList -> %>
+${name}: <% instrList.findAll{!it.instruction.name.startsWith("__")}.each { %>
+  - ${it.instruction.name}:
+    encoding: ${it.encoding}
+    mask: ${it.mask}<%}}%>
+
