@@ -310,18 +310,18 @@ void spi_m::spi_cmd(std::array<bool, 32> spim_cmd){
 
 // }
 
-void spi_m::spim_open()
-{
-    regs->r_SPIM_CMD_CFG.CLR = 1;
-    regs->r_SPIM_CMD_CFG.EN = 1;
-    regs->r_SPIM_CMD_CFG.PENDING = 1;
-    regs->r_SPIM_CMD_CFG.DATASIZE = 01;
-    regs->r_SPIM_CMD_CFG.CONTINOUS = 1;
+// void spi_m::spim_open()
+// {
+//     regs->r_SPIM_CMD_CFG.CLR = 1;
+//     regs->r_SPIM_CMD_CFG.EN = 1;
+//     regs->r_SPIM_CMD_CFG.PENDING = 1;
+//     regs->r_SPIM_CMD_CFG.DATASIZE = 01;
+//     regs->r_SPIM_CMD_CFG.CONTINOUS = 1;
     
     
-        // "[SPIM] Opening spim device (id: %d)\n"
-    // std::cout << "Opening spim device" << std::endl;
-    if(regs->r_SPIM_CMD_CFG.EN == 1){std::cout << "Opening spim device" << std::endl;}
+//         // "[SPIM] Opening spim device (id: %d)\n"
+//     // std::cout << "Opening spim device" << std::endl;
+//     if(regs->r_SPIM_CMD_CFG.EN == 1){std::cout << "Opening spim device" << std::endl;}
     
     
 
