@@ -1,4 +1,3 @@
-
 TARGET  = hello
 C_SRCS  = $(wildcard *.c) 
 HEADERS = $(wildcard *.h)

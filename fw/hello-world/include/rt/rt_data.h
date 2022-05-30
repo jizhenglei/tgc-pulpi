@@ -288,75 +288,75 @@ typedef struct rt_periph_copy_s {
 } rt_periph_copy_t;
 
 
-// struct pi_task_implem
-// {
-//   struct pi_task *next;
-//   struct rt_thread_s *thread;
-//   int pending;
-//   int keep;
-//   void (*saved_callback)(void *);
-//   void *saved_arg;
-//   int saved_pending;
+struct pi_task_implem
+{
+  struct pi_task *next;
+  struct rt_thread_s *thread;
+  int pending;
+  int keep;
+  void (*saved_callback)(void *);
+  void *saved_arg;
+  int saved_pending;
 
-//   union {
-//     rt_periph_copy_t copy;
-//     struct {
-//       unsigned int data[8];
-//     };
-//     struct {
-//       unsigned int time;
-//     };
-//     rt_bridge_req_t bridge_req;
-//   };
-// } __attribute__((packed));
+  union {
+    rt_periph_copy_t copy;
+    struct {
+      unsigned int data[8];
+    };
+    struct {
+      unsigned int time;
+    };
+    rt_bridge_req_t bridge_req;
+  };
+} __attribute__((packed));
 
-// #define CLUSTER_TASK_IMPLEM struct pi_cluster_task_implem implem
-// #define PI_TASK_IMPLEM struct pi_task_implem implem
+#define CLUSTER_TASK_IMPLEM struct pi_cluster_task_implem implem
+#define PI_TASK_IMPLEM struct pi_task_implem implem
 
-// typedef struct pi_task{
-//     // Warning, might be accessed inline in asm, and thus can not be moved
-//     uintptr_t arg[4];
-//     int8_t done;
-//     int id;
+typedef struct pi_task{
+    // Warning, might be accessed inline in asm, and thus can not be moved
+    uintptr_t arg[4];
+    int8_t done;
+    int id;
 
-//     PI_TASK_IMPLEM;
+    PI_TASK_IMPLEM;
 
-// } pi_task_t;
+} pi_task_t;
 
-// #include "../pmsis/pmsis_types.h"
-// #include "../pmsis/cluster/cl_pmsis_types.h"
+#include "../pmsis/pmsis_types.h"
+#include "../pmsis/cluster/cl_pmsis_types.h"
 
-// typedef struct pi_task rt_event_t;
+typedef struct pi_task rt_event_t;
 
 
-// typedef struct rt_thread_s {
-//   union {
-//     struct {
-//         int ra;
-//         int s0;
-//         int s1;
-//         int s2;
-//         int s3;
-//         int s4;
-//         int s5;
-//         int s6;
-//         int s7;
-//         int s8;
-//         int s9;
-//         int s10;
-//         int s11;
-//         int sp;
-//     } regs;
-//     char jmpbuf;
-//   } u;
-//   struct rt_thread_s *next;
-//   struct rt_thread_s *waiting;
-//   int finished;
-//   void *status;
-//   rt_event_t event;
-//   int state;
-//   int error;
-// } rt_thread_t;
+typedef struct rt_thread_s {
+  union {
+    struct {
+        int ra;
+        int s0;
+        int s1;
+        int s2;
+        int s3;
+        int s4;
+        int s5;
+        int s6;
+        int s7;
+        int s8;
+        int s9;
+        int s10;
+        int s11;
+        int sp;
+    } regs;
+    char jmpbuf;
+  } u;
+  struct rt_thread_s *next;
+  struct rt_thread_s *waiting;
+  int finished;
+  void *status;
+  rt_event_t event;
+  int state;
+  int error;
+} rt_thread_t;
 
 typedef struct rt_periph_channel_s {
   rt_periph_copy_t *first;
@@ -368,48 +368,48 @@ typedef struct rt_periph_channel_s {
 } rt_periph_channel_t;
 
 
-// #if defined(UDMA_VERSION) && UDMA_VERSION >= 3
+#if defined(UDMA_VERSION) && UDMA_VERSION >= 3
 typedef struct {
   rt_periph_copy_t *pendings[2];
   rt_periph_copy_t *first_waiting;
   rt_periph_copy_t *last_waiting;
 } rt_periph_spim_t;
-// #endif
+#endif
 
 
 
-// typedef struct {
-//   int nb_pe;
-//   void (*entry)(void *);
-//   void *arg;
-//   void *stacks;
-//   int master_stack_size;
-//   int slave_stack_size;
-//   rt_event_t *event;
-// } __rt_cluster_call_t;
+typedef struct {
+  int nb_pe;
+  void (*entry)(void *);
+  void *arg;
+  void *stacks;
+  int master_stack_size;
+  int slave_stack_size;
+  rt_event_t *event;
+} __rt_cluster_call_t;
 
-// typedef struct {
-// } rt_cluster_call_t;
+typedef struct {
+} rt_cluster_call_t;
 
-// typedef struct
-// {
-//   struct pi_cluster_task *first_call_fc_for_cl;
-//   struct pi_cluster_task *first_call_fc;
-//   struct pi_cluster_task *last_call_fc;
-// } rt_cluster_call_pool_t;
+typedef struct
+{
+  struct pi_cluster_task *first_call_fc_for_cl;
+  struct pi_cluster_task *first_call_fc;
+  struct pi_cluster_task *last_call_fc;
+} rt_cluster_call_pool_t;
 
-// typedef struct cluster_data_t {
-//   int mount_count;
-//   rt_event_t *events;
-//   void *stacks;
-//   int stacks_size;
-//   unsigned int trig_addr;
-//   rt_cluster_call_pool_t *pool;
-//   int powered_up;
-//   int state;
-//   int cid;
-//   rt_event_t *mount_event;
-// } rt_fc_cluster_data_t;
+typedef struct cluster_data_t {
+  int mount_count;
+  rt_event_t *events;
+  void *stacks;
+  int stacks_size;
+  unsigned int trig_addr;
+  rt_cluster_call_pool_t *pool;
+  int powered_up;
+  int state;
+  int cid;
+  rt_event_t *mount_event;
+} rt_fc_cluster_data_t;
 
 typedef struct {
   char *name;
@@ -423,80 +423,80 @@ typedef struct {
   } u;
 } rt_dev_t;
 
-// typedef struct {
-//   rt_extern_alloc_t *alloc;
-//   int channel;
-// } rt_hyperram_t;
+typedef struct {
+  rt_extern_alloc_t *alloc;
+  int channel;
+} rt_hyperram_t;
 
-// typedef struct {
-//   rt_periph_copy_t periph_copy;
-// } rt_flash_copy_t;
+typedef struct {
+  rt_periph_copy_t periph_copy;
+} rt_flash_copy_t;
 
-// struct rt_flash_s;
-// typedef struct rt_flash_conf_s rt_flash_conf_t;
+struct rt_flash_s;
+typedef struct rt_flash_conf_s rt_flash_conf_t;
 
-// // BEWARE, assembly offsets in all flash structures must be updated below if this structure is modified
-// typedef struct rt_flash_dev_s {
-//   struct rt_flash_s *(*open)(rt_dev_t *dev, rt_flash_conf_t *conf, rt_event_t *event);
-//   void (*close)(struct rt_flash_s *flash, rt_event_t *event);
-//   void (*read)(struct rt_flash_s *dev, void *addr, void *data, size_t size, rt_event_t *event);
-//   void (*program)(struct rt_flash_s *dev, void *data, void *addr, size_t size, rt_event_t *event);
-//   void (*erase_chip)(struct rt_flash_s *dev, rt_event_t *event);
-//   void (*erase_sector)(struct rt_flash_s *dev, void *data, rt_event_t *event);
-//   void (*erase)(struct rt_flash_s *dev, void *addr, int size, rt_event_t *event);
+// BEWARE, assembly offsets in all flash structures must be updated below if this structure is modified
+typedef struct rt_flash_dev_s {
+  struct rt_flash_s *(*open)(rt_dev_t *dev, rt_flash_conf_t *conf, rt_event_t *event);
+  void (*close)(struct rt_flash_s *flash, rt_event_t *event);
+  void (*read)(struct rt_flash_s *dev, void *addr, void *data, size_t size, rt_event_t *event);
+  void (*program)(struct rt_flash_s *dev, void *data, void *addr, size_t size, rt_event_t *event);
+  void (*erase_chip)(struct rt_flash_s *dev, rt_event_t *event);
+  void (*erase_sector)(struct rt_flash_s *dev, void *data, rt_event_t *event);
+  void (*erase)(struct rt_flash_s *dev, void *addr, int size, rt_event_t *event);
 
-// } rt_flash_dev_t;
+} rt_flash_dev_t;
 
-// // BEWARE, assembly offsets in all flash structures must be updated below if this structure is modified
-// typedef struct rt_flash_s {
-//   rt_flash_dev_t desc;
-// } rt_flash_t;
+// BEWARE, assembly offsets in all flash structures must be updated below if this structure is modified
+typedef struct rt_flash_s {
+  rt_flash_dev_t desc;
+} rt_flash_t;
 
-// typedef struct rt_hyperflash_s {
-//   rt_flash_t header;
-//   int channel;
-//   struct pi_device device;
-// } rt_hyperflash_t;
+typedef struct rt_hyperflash_s {
+  rt_flash_t header;
+  int channel;
+  struct pi_device device;
+} rt_hyperflash_t;
 
-// // BEWARE, assembly offsets must be updated below if this structure is modified
-// typedef struct {
-//   rt_flash_t header;
-//   int periph_id;
-//   unsigned int periph_base;
-//   rt_periph_copy_t *first_pending_copy;
-//   rt_periph_copy_t *last_pending_copy;
-// } rt_mram_t;
+// BEWARE, assembly offsets must be updated below if this structure is modified
+typedef struct {
+  rt_flash_t header;
+  int periph_id;
+  unsigned int periph_base;
+  rt_periph_copy_t *first_pending_copy;
+  rt_periph_copy_t *last_pending_copy;
+} rt_mram_t;
 
-// typedef struct rt_uart_s {
-//   int open_count;
-//   int channel;
-//   unsigned int baudrate;
-//   int active;
-// } rt_uart_t;
+typedef struct rt_uart_s {
+  int open_count;
+  int channel;
+  unsigned int baudrate;
+  int active;
+} rt_uart_t;
 
-// typedef struct rt_dma_copy_s {
-//   int id;
-// } rt_dma_copy_t;
+typedef struct rt_dma_copy_s {
+  int id;
+} rt_dma_copy_t;
 
-// typedef struct {
-//   unsigned int cluster_mask;
-// } rt_iclock_t;
+typedef struct {
+  unsigned int cluster_mask;
+} rt_iclock_t;
 
-// typedef struct {
-//   unsigned int tas;
-//   unsigned int addr;
-//   unsigned int cluster_mask;
-// } rt_iclock_cl_t;
+typedef struct {
+  unsigned int tas;
+  unsigned int addr;
+  unsigned int cluster_mask;
+} rt_iclock_cl_t;
 
-// #if defined(CSR_PCER_NB_EVENTS)
+#if defined(CSR_PCER_NB_EVENTS)
 
-// #define RT_PERF_NB_EVENTS (CSR_PCER_NB_EVENTS + 1)
+#define RT_PERF_NB_EVENTS (CSR_PCER_NB_EVENTS + 1)
 
-// #else
+#else
 
 #define RT_PERF_NB_EVENTS 0
 
-// #endif
+#endif
 
 typedef struct {
   unsigned int events;
@@ -504,211 +504,211 @@ typedef struct {
 } rt_perf_t;
 
 
-// typedef struct rt_i2s_s rt_i2s_t;
-// typedef struct rt_i2s_conf_s rt_i2s_conf_t;
+typedef struct rt_i2s_s rt_i2s_t;
+typedef struct rt_i2s_conf_s rt_i2s_conf_t;
 
-// typedef struct rt_i2s_dev_s {
-//   rt_i2s_t *(*open)(rt_dev_t *dev, rt_i2s_conf_t *conf, rt_event_t*event);
-//   void (*close)(rt_i2s_t *dev, rt_event_t*event);
-//   void (*capture)(rt_i2s_t *dev_name, void *buffer, size_t size, rt_event_t *event);
-//   void (*start)(rt_i2s_t *handle);
-//   void (*stop)(rt_i2s_t *handle);
-//   void (*channel_capture)(rt_i2s_t *dev_name, int channel, void *buffer, size_t size, rt_event_t *event);
-// } rt_i2s_dev_t;
+typedef struct rt_i2s_dev_s {
+  rt_i2s_t *(*open)(rt_dev_t *dev, rt_i2s_conf_t *conf, rt_event_t*event);
+  void (*close)(rt_i2s_t *dev, rt_event_t*event);
+  void (*capture)(rt_i2s_t *dev_name, void *buffer, size_t size, rt_event_t *event);
+  void (*start)(rt_i2s_t *handle);
+  void (*stop)(rt_i2s_t *handle);
+  void (*channel_capture)(rt_i2s_t *dev_name, int channel, void *buffer, size_t size, rt_event_t *event);
+} rt_i2s_dev_t;
 
-// typedef struct rt_i2s_s {
-//   rt_i2s_dev_t desc;
-//   int i2s_freq;
-//   struct rt_i2s_s *next;
-//   short decimation_log2;
-//   unsigned char udma_channel;
-//   unsigned char i2s_id;
-//   unsigned char periph_id;
-//   unsigned char clk;
-//   char pdm;
-//   char dual;
-//   char running;
-//   char width;
-//   char channels;
-// } rt_i2s_t;
+typedef struct rt_i2s_s {
+  rt_i2s_dev_t desc;
+  int i2s_freq;
+  struct rt_i2s_s *next;
+  short decimation_log2;
+  unsigned char udma_channel;
+  unsigned char i2s_id;
+  unsigned char periph_id;
+  unsigned char clk;
+  char pdm;
+  char dual;
+  char running;
+  char width;
+  char channels;
+} rt_i2s_t;
 
-// typedef struct rt_fs_l2_s {
-//   uint32_t fs_offset;
-//   uint32_t reserved0;
-//   uint32_t fs_size;
-//   uint32_t reserved1;
-// } rt_fs_l2_t;
-
-
-// #define FS_READ_THRESHOLD            16
-// #define FS_READ_THRESHOLD_BLOCK      128
-// #define FS_READ_THRESHOLD_BLOCK_FULL (FS_READ_THRESHOLD_BLOCK + 8)
-
-// typedef struct {
-
-// } rt_mutex_t;
-
-// typedef struct {
-//   unsigned int addr;
-//   unsigned int size;
-//   unsigned int path_size;
-//   char name[];
-// } rt_fs_desc_t;
-
-// typedef struct rt_fc_lock_req_s rt_fc_lock_req_t;
-
-// typedef struct {
-//   int locked;
-//   rt_fc_lock_req_t *waiting;
-//   rt_fc_lock_req_t *last_waiting;
-//   rt_thread_t *fc_wait;
-// #if !defined(ARCHI_HAS_FC)
-//   uint32_t lock;
-// #endif
-// } rt_fc_lock_t;
-
-// typedef struct rt_fc_lock_req_s {
-//   rt_fc_lock_t *lock;
-//   rt_fc_lock_req_t *next;
-//   rt_event_t event;
-//   char done;
-//   char cid;
-//   char req_lock;
-// } rt_fc_lock_req_t;
-
-// typedef struct rt_uart_req_s {
-//   rt_uart_t *uart;
-//   void *buffer;
-//   size_t size;
-//   rt_event_t event;
-//   char done;
-//   char cid;
-// } rt_uart_req_t ;
-
-// typedef struct rt_io_wait_req_s {
-//   rt_event_t event;
-//   char done;
-//   char cid;
-// } rt_io_wait_req_t ;
-
-// struct pi_cl_alloc_req_s {
-//   void *result;
-//   int flags;
-//   int size;
-//   rt_event_t event;
-//   char done;
-//   char cid;
-// };
-
-// struct pi_cl_free_req_s {
-//   void *result;
-//   int flags;
-//   int size;
-//   void *chunk;
-//   rt_event_t event;
-//   char done;
-//   char cid;
-// };
-
-// typedef struct pi_cl_alloc_req_s rt_alloc_req_t;
-// typedef struct pi_cl_free_req_s rt_free_req_t;
+typedef struct rt_fs_l2_s {
+  uint32_t fs_offset;
+  uint32_t reserved0;
+  uint32_t fs_size;
+  uint32_t reserved1;
+} rt_fs_l2_t;
 
 
-// typedef struct pi_cl_hyper_req_s rt_hyperram_req_t ;
+#define FS_READ_THRESHOLD            16
+#define FS_READ_THRESHOLD_BLOCK      128
+#define FS_READ_THRESHOLD_BLOCK_FULL (FS_READ_THRESHOLD_BLOCK + 8)
 
-// typedef struct pi_cl_hyperram_alloc_req_s rt_hyperram_alloc_req_t ;
+typedef struct {
 
-// typedef struct pi_cl_hyperram_free_req_s rt_hyperram_free_req_t ;
+} rt_mutex_t;
 
-// typedef struct {
-//   rt_flash_t *dev;
-//   void *addr;
-//   void *flash_addr;
-//   size_t size;
-//   rt_event_t event;
-//   int done;
-//   unsigned char cid;
-//   unsigned char is_write;
-//   unsigned char direct;
-// } rt_flash_req_t;
+typedef struct {
+  unsigned int addr;
+  unsigned int size;
+  unsigned int path_size;
+  char name[];
+} rt_fs_desc_t;
 
-// typedef struct rt_file_s rt_file_t;
+typedef struct rt_fc_lock_req_s rt_fc_lock_req_t;
 
-// typedef struct {
-//   rt_file_t *file;
-//   void *buffer;
-//   size_t size;
-//   rt_event_t event;
-//   int done;
-//   int result;
-//   unsigned char cid;
-//   unsigned char direct;
-//   unsigned int offset;
-// } rt_fs_req_t;
+typedef struct {
+  int locked;
+  rt_fc_lock_req_t *waiting;
+  rt_fc_lock_req_t *last_waiting;
+  rt_thread_t *fc_wait;
+#if !defined(ARCHI_HAS_FC)
+  uint32_t lock;
+#endif
+} rt_fc_lock_t;
 
-// typedef struct {
-//   unsigned int trig_addr;
-//   int event_id;
-// } rt_notif_t;
+typedef struct rt_fc_lock_req_s {
+  rt_fc_lock_t *lock;
+  rt_fc_lock_req_t *next;
+  rt_event_t event;
+  char done;
+  char cid;
+  char req_lock;
+} rt_fc_lock_req_t;
 
-// typedef struct {
-//   char *name;
-//   unsigned int *config;
-// } rt_padframe_profile_t;
+typedef struct rt_uart_req_s {
+  rt_uart_t *uart;
+  void *buffer;
+  size_t size;
+  rt_event_t event;
+  char done;
+  char cid;
+} rt_uart_req_t ;
 
-// typedef struct
-// {
-//   rt_event_t *event;
-//   rt_event_t *user_event;
-//   unsigned int current_time;
-//   unsigned int period;
-//   int flags;
-// } rt_timer_t;
+typedef struct rt_io_wait_req_s {
+  rt_event_t event;
+  char done;
+  char cid;
+} rt_io_wait_req_t ;
+
+struct pi_cl_alloc_req_s {
+  void *result;
+  int flags;
+  int size;
+  rt_event_t event;
+  char done;
+  char cid;
+};
+
+struct pi_cl_free_req_s {
+  void *result;
+  int flags;
+  int size;
+  void *chunk;
+  rt_event_t event;
+  char done;
+  char cid;
+};
+
+typedef struct pi_cl_alloc_req_s rt_alloc_req_t;
+typedef struct pi_cl_free_req_s rt_free_req_t;
+
+
+typedef struct pi_cl_hyper_req_s rt_hyperram_req_t ;
+
+typedef struct pi_cl_hyperram_alloc_req_s rt_hyperram_alloc_req_t ;
+
+typedef struct pi_cl_hyperram_free_req_s rt_hyperram_free_req_t ;
+
+typedef struct {
+  rt_flash_t *dev;
+  void *addr;
+  void *flash_addr;
+  size_t size;
+  rt_event_t event;
+  int done;
+  unsigned char cid;
+  unsigned char is_write;
+  unsigned char direct;
+} rt_flash_req_t;
+
+typedef struct rt_file_s rt_file_t;
+
+typedef struct {
+  rt_file_t *file;
+  void *buffer;
+  size_t size;
+  rt_event_t event;
+  int done;
+  int result;
+  unsigned char cid;
+  unsigned char direct;
+  unsigned int offset;
+} rt_fs_req_t;
+
+typedef struct {
+  unsigned int trig_addr;
+  int event_id;
+} rt_notif_t;
+
+typedef struct {
+  char *name;
+  unsigned int *config;
+} rt_padframe_profile_t;
+
+typedef struct
+{
+  rt_event_t *event;
+  rt_event_t *user_event;
+  unsigned int current_time;
+  unsigned int period;
+  int flags;
+} rt_timer_t;
 
 
 
 
-// typedef struct rt_task_s rt_task_t;
+typedef struct rt_task_s rt_task_t;
 
-// typedef struct rt_task_s {
-//   void (*entry)(rt_task_t *task, int id);
-//   uint32_t args[4];
-//   rt_task_t *next;
-//   void *stacks;
-//   void *cluster;
-//   rt_event_t *event;
-//   uint16_t stack_size;
-//   unsigned char nb_cores;
-//   unsigned char cid;
-//   unsigned char nb_cores_to_pop;
-//   unsigned char nb_cores_to_end;
-//   unsigned char pending;
-// } rt_task_t;
+typedef struct rt_task_s {
+  void (*entry)(rt_task_t *task, int id);
+  uint32_t args[4];
+  rt_task_t *next;
+  void *stacks;
+  void *cluster;
+  rt_event_t *event;
+  uint16_t stack_size;
+  unsigned char nb_cores;
+  unsigned char cid;
+  unsigned char nb_cores_to_pop;
+  unsigned char nb_cores_to_end;
+  unsigned char pending;
+} rt_task_t;
 
-// typedef struct
-// {
-//   rt_task_t *__rt_task_first_fc_for_cl;
-//   rt_task_t *__rt_task_first_fc;
-//   rt_task_t *__rt_task_last_fc;
-//   int nb_cores_done;
-// } rt_task_cluster_loc_t;
+typedef struct
+{
+  rt_task_t *__rt_task_first_fc_for_cl;
+  rt_task_t *__rt_task_first_fc;
+  rt_task_t *__rt_task_last_fc;
+  int nb_cores_done;
+} rt_task_cluster_loc_t;
 
-// typedef struct
-// {
-//   void *stacks;
-//   unsigned int stack_size;
-//   int cid;
-//   rt_event_t *end_event;
-//   rt_task_cluster_loc_t *loc;
-//   int nb_cores;
-//   int free_stacks;
-// } rt_task_cluster_t;
+typedef struct
+{
+  void *stacks;
+  unsigned int stack_size;
+  int cid;
+  rt_event_t *end_event;
+  rt_task_cluster_loc_t *loc;
+  int nb_cores;
+  int free_stacks;
+} rt_task_cluster_t;
 
-// extern rt_padframe_profile_t __rt_padframe_profiles[];
+extern rt_padframe_profile_t __rt_padframe_profiles[];
 
-// #ifdef ARCHI_UDMA_HAS_HYPER
-// extern RT_FC_TINY_DATA void *__rt_hyper_udma_handle;
-// #endif
+#ifdef ARCHI_UDMA_HAS_HYPER
+extern RT_FC_TINY_DATA void *__rt_hyper_udma_handle;
+#endif
 
 #include "data/rt_data_spim.h"
 #include "data/rt_data_camera.h"

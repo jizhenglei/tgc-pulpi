@@ -1,14 +1,6 @@
 #include <stdint.h>
 #include <stdio.h>
 #include <unistd.h>
-
-
-
-
-
-#include <stdint.h>
-#include <stdio.h>
-#include <unistd.h>
 // #include "spim-v3.c"
 #include "include/rt/data/rt_data_spim.h"
 #include "include/rt/rt_spim.h"
@@ -126,8 +118,8 @@ int main() {
   printf("New, End of execution");
 
   // Then open the device
-  rt_spim_t *spim = rt_spim_open(NULL, &conf, NULL);
-  if (spim == NULL) return -1;
+  // rt_spim_t *spim = rt_spim_open(NULL, &conf, NULL);
+  // if (spim == NULL) return -1;
 
 
 }

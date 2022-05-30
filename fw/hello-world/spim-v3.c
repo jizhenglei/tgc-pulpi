@@ -37,7 +37,7 @@
 
 
 #include <stdint.h>
-#include "../include/rt/rt_api.h"
+// #include "rt/rt_api.h"
 
 // static int __rt_spim_open_count[ARCHI_UDMA_NB_SPIM];
 

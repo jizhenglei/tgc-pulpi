@@ -327,13 +327,13 @@ void spi_m::spi_cmd(std::array<bool, 32> spim_cmd){
 
 
 
-}
+// }
 
-void spi_m::spim_send(){
+// void spi_m::spim_send(){
 
 
     
-}
+// }
 
 
 }

@@ -37,52 +37,37 @@ typedef struct __rt_spim_s rt_spim_t;
 
 typedef struct __rt_spim_s {
   int max_baudrate;
-// #if defined(UDMA_VERSION) && UDMA_VERSION >= 1
+#if defined(UDMA_VERSION) && UDMA_VERSION >= 1
   unsigned int cfg;
   char cs;
-// #endif
+#endif
   char wordsize;
   char big_endian;
   signed char cs_gpio;
   char channel;
 
-// #if !defined(UDMA_VERSION)
+#if !defined(UDMA_VERSION)
 
-//   int div;
-//   rt_spim_t *next;
+  int div;
+  rt_spim_t *next;
 
-// #elif defined(UDMA_VERSION) && UDMA_VERSION >= 2
+#elif defined(UDMA_VERSION) && UDMA_VERSION >= 2
 
   char byte_align;
   unsigned char div;
   char polarity;
   char phase;
 
-// #elif defined(UDMA_VERSION) && UDMA_VERSION == 1
+#elif defined(UDMA_VERSION) && UDMA_VERSION == 1
 
-//   unsigned char div;
-//   char polarity;
-//   char phase;
+  unsigned char div;
+  char polarity;
+  char phase;
 
-// #endif
+#endif
 
 } rt_spim_t;
 
-// #define CLUSTER_TASK_IMPLEM struct pi_cluster_task_implem implem
-// #define PI_TASK_IMPLEM struct pi_task_implem implem
-
-//多余的 from rt_data
-typedef struct pi_task{
-    // Warning, might be accessed inline in asm, and thus can not be moved
-    uintptr_t arg[4];
-    int8_t done;
-    int id;
-
-    // PI_TASK_IMPLEM;
-
-} pi_task_t;
-
-typedef struct pi_task rt_event_t;
 
 
 #endif
