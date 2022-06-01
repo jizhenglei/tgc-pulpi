@@ -2,8 +2,26 @@
 #include <stdio.h>
 #include <unistd.h>
 // #include "spim-v3.c"
-#include "include/rt/data/rt_data_spim.h"
-#include "include/rt/rt_spim.h"
+// #include "include/rt/data/rt_data_spim.h"
+// #include "include/rt/rt_spim.h"
+#include "include_b/rt/rt_data.h"
+// #include "include/rt/rt_debug.h"
+// #include "include/rt/rt_freq.h"
+// #include "include_a/hal/udma/udma_v3.h"
+// #include "include/rt.h"
+// #include "include/rt/rt_periph.h"
+// #include "include/rt/rt_irq.h"
+// #include "include_a/archi/chips/pulpissimo/properties.h"
+// #include "kernel/alloc.c"
+// #include "kernel/dev.c"
+// #include "include/rt/data/rt_data_spim.h"
+// #include "include/rt/rt_perf.h"
+// #include "include/rt/rt_periph.h"
+// #include "include_a/archi/udma/udma_v3.h"
+
+
+
+
 
 // #include "encoding.h"
 // #include "platform.h"
@@ -89,20 +107,6 @@
 
 // } rt_spim_t;
 
-
-
-void rt_spim_conf_init(rt_spim_conf_t *conf)
-{
-  conf->wordsize = RT_SPIM_WORDSIZE_8;
-  conf->big_endian = 0;
-  conf->max_baudrate = 10000000;
-  conf->cs_gpio = -1;
-  conf->cs = -1;
-  conf->id = -1;
-  conf->polarity = 0;
-  conf->phase = 0;
-}
-
 int main() {
   rt_spim_conf_t conf;
   // Get default configuration
@@ -118,10 +122,96 @@ int main() {
   printf("New, End of execution");
 
   // Then open the device
-  // rt_spim_t *spim = rt_spim_open(NULL, &conf, NULL);
-  // if (spim == NULL) return -1;
+  rt_spim_t *spim = rt_spim_open(NULL, &conf, NULL);
+  if (spim == NULL) return -1;
 
 
 }
 
  
+
+
+
+static int __rt_spim_open_count[ARCHI_UDMA_NB_SPIM];
+void rt_spim_conf_init(rt_spim_conf_t *conf)
+{
+  conf->wordsize = RT_SPIM_WORDSIZE_8;
+  conf->big_endian = 0;
+  conf->max_baudrate = 10000000;
+  conf->cs_gpio = -1;
+  conf->cs = -1;
+  conf->id = -1;
+  conf->polarity = 0;
+  conf->phase = 0;
+}
+
+rt_spim_t *rt_spim_open(char *dev_name, rt_spim_conf_t *conf, rt_event_t *event)
+{
+  int irq = rt_irq_disable();
+
+  rt_spim_conf_t def_conf;
+
+  if (conf == NULL)
+  {
+    conf = &def_conf;
+    rt_spim_conf_init(conf);
+  }
+
+  int channel = -1;
+
+  if (conf->id != -1)
+  {  
+    rt_trace(RT_TRACE_DEV_CTRL, "[SPIM] Opening spim device (id: %d)\n", conf->id);
+    channel = ARCHI_UDMA_SPIM_ID(conf->id);
+  }
+  else if (dev_name != NULL)
+  {
+    rt_trace(RT_TRACE_DEV_CTRL, "[SPIM] Opening spim device (name: %s)\n", dev_name);
+  
+    rt_dev_t *dev = rt_dev_get(dev_name);
+    if (dev == NULL) goto error;
+
+    channel = dev->channel;
+  }
+
+  if (channel == -1) goto error;
+
+  rt_spim_t *spim = rt_alloc(RT_ALLOC_FC_DATA, sizeof(rt_spim_t));
+  if (spim == NULL) goto error;
+
+  spim->channel = channel;
+
+  spim->wordsize = conf->wordsize;
+  spim->big_endian = conf->big_endian;
+  spim->polarity = conf->polarity;
+  spim->phase = conf->phase;
+  spim->max_baudrate = conf->max_baudrate;
+  spim->cs = conf->cs;
+  spim->byte_align = __rt_spim_get_byte_align(conf->wordsize, conf->big_endian);
+
+  int div = __rt_spi_get_div(spim->max_baudrate);
+  spim->div = div;
+
+  spim->cfg = SPI_CMD_CFG(div, conf->polarity, conf->phase);
+
+  int id = channel - ARCHI_UDMA_SPIM_ID(0);
+
+  __rt_spim_open_count[id]++;
+
+  if (__rt_spim_open_count[id] == 1)
+  {
+    plp_udma_cg_set(plp_udma_cg_get() | (1<<channel));
+    __rt_udma_callback[channel] = __rt_spim_handle_eot;
+    __rt_udma_callback_data[channel] = &__rt_spim_periph[id];
+    soc_eu_fcEventMask_setEvent(ARCHI_SOC_EVENT_PERIPH_EVT_BASE(channel) + ARCHI_UDMA_SPIM_EOT_EVT);
+  }
+
+  rt_irq_restore(irq);
+
+  return spim;
+
+error:
+  rt_warning("[SPIM] Failed to open spim device\n");
+  return NULL;
+}
+
